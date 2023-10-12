@@ -1,0 +1,11 @@
+{
+    "app_name": "당신의 도서관",
+    "add_book": "도서 추가",
+    "title": "제목",
+    "author": "작가",
+    "check": "독서 여부",
+    "price": "구매 가격",
+    "update": "수정",
+    "delete": "삭제",
+    "buy": "구매"
+}

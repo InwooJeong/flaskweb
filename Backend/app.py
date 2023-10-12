@@ -15,19 +15,22 @@ BOOKS = [
         'id': uuid.uuid4().hex,
         'title': 'Demian',
         'author': 'Hermann Hesse',
-        'read': True
+        'read': True,
+        'price': 12000
     },
     {
         'id': uuid.uuid4().hex,
         'title': 'The Lord of the Rings: The Two Towers',
         'author': 'J. R. R. Tolkien',
-        'read': False
+        'read': False,
+        'price': 17000
     },
     {
         'id': uuid.uuid4().hex,
         'title': 'Harry Potter and the Prisoner of Azkaban',
         'author': 'J. K. Rowling',
-        'read': True
+        'read': True,
+        'price': 15000
     }
 ]
 
@@ -47,7 +50,8 @@ def all_books():
             'id': uuid.uuid4().hex,
             'title': post_data.get('title'),
             'author': post_data.get('author'),
-            'read': post_data.get('read')
+            'read': post_data.get('read'),
+            'price': post_data.get('price')
         })
         response_object['message'] = 'Book added!'
     else:
@@ -65,7 +69,8 @@ def single_book(book_id):
             'id': uuid.uuid4().hex,
             'title': post_data.get('title'),
             'author': post_data.get('author'),
-            'read': post_data.get('read')
+            'read': post_data.get('read'),
+            'price': post_data.get('price')
         })
         response_object['message'] = 'Updated!'
     if request.method == 'DELETE':

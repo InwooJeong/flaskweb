@@ -2,7 +2,10 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-10">
-        <h1>Books</h1>
+        <h1>{{$t('app_name')}}</h1>
+        <select style="float: right;" v-model="$i18n.locale">
+            <option v-for="locale in $i18n.availableLocales" :key="`locale-${locale}`" :value="locale">{{ locale }} </option>
+        </select>
         <hr><br><br>
         <alert :message="message" v-if="showMessage"></alert>
         <alert2 :message="message" v-if="showMessage2"></alert2>
@@ -10,16 +13,17 @@
           type="button" 
           class="btn btn-success btn-sm"
           @click="toggleAddBookModal">
-          Add Book
+          {{$t('add_book')}}
         </button>
         <br><br>
 
         <table class="table table-hover">
           <thead>
             <tr>
-              <th scope="col">Title</th>
-              <th scope="col">Author</th>
-              <th scope="col">Read?</th>
+              <th scope="col">{{$t('title')}}</th>
+              <th scope="col">{{$t('author')}}</th>
+              <th scope="col">{{$t('check')}}</th>
+              <th scope="col">{{$t('price')}}</th>
               <th></th>
             </tr>
           </thead>
@@ -29,22 +33,29 @@
               <td>{{ book.title }}</td>
               <td>{{ book.author }}</td>
               <td>
-                <span v-if="book.read">Yes</span>
-                <span v-else>No</span>
+                <span v-if="book.read">o</span>
+                <span v-else>x</span>
               </td>
+              <td>\ {{ Number(book.price).toLocaleString() }}</td>
               <td>
                 <div class="btn-group" role="group">
                   <button 
                     type="button" 
                     class="btn btn-warning btn-sm"
                     @click="toggleUpdateBookModal(book)">
-                    Update
+                    {{$t('update')}}
                   </button>
                   <button 
                     type="button" 
                     class="btn btn-danger btn-sm"
                     @click="handleDeleteBook(book)">
-                    Delete
+                    {{$t('delete')}}
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-sm"
+                    @click="handleBuyBook(book)">
+                    {{$t('buy')}}
                   </button>
                 </div>
               </td>
@@ -53,7 +64,7 @@
 
           <tbody v-if="books.length<1">
             <tr>
-              <td colspan="3">You don't have any book! please add one</td>
+              <td colspan="5">You don't have any book! please add one</td>
             </tr>
           </tbody>
 
@@ -103,6 +114,16 @@
                 id="addBookAuthor"
                 v-model="addBookForm.author"
                 placeholder="Enter author">
+            </div>
+            <div class="mb-3">
+              <label for="addBookPrice" class="form-label">Purchase price : </label>
+              <input
+                type="number"
+                step="1"
+                class="form-control"
+                id="addBookPrice"
+                v-model="addBookForm.price"
+                placeholder="Enter price">
             </div>
             <div class="mb-3 form-check">
               <input
@@ -177,6 +198,16 @@
                 v-model="updateBookForm.author"
                 placeholder="Enter author">
             </div>
+            <div class="mb-3">
+              <label for="updateBookPrice" class="form-label">Price:</label>
+              <input
+                type="number"
+                step="1"
+                class="form-control"
+                id="updateBookPrice"
+                v-model="updateBookForm.price"
+                placeholder="Enter price">
+            </div>
             <div class="mb-3 form-check">
               <input
                 type="checkbox"
@@ -225,11 +256,13 @@ export default{
         title:'',
         author:'',
         read:[],
+        price:'',
       },
       addBookForm: {
         title: '',
         author: '',
         read: [],
+        price: '',
       },
       books: [],
       message: '',
@@ -324,6 +357,7 @@ export default{
         title: this.addBookForm.title,
         author: this.addBookForm.author,
         read, // property shorthand
+        price: this.addBookForm.price,
       };
       this.addBook(payload);
       this.initForm();
@@ -332,10 +366,12 @@ export default{
       this.addBookForm.title = '';
       this.addBookForm.author = '';
       this.addBookForm.read = [];
+      this.addBookForm.price = '';
       this.updateBookForm.id = '';
       this.updateBookForm.title = '';
       this.updateBookForm.author = '';
       this.updateBookForm.read = [];
+      this.updateBookForm.price = '';
     },
     toggleAddBookModal(){
       const body = document.querySelector('body');
@@ -366,13 +402,24 @@ export default{
         title: this.updateBookForm.title,
         author: this.updateBookForm.author,
         read,
+        price: this.updateBookForm.price,
       };
       this.updateBook(payload, this.updateBookForm.id);
     },
     handleDeleteBook(book){
-      if(confirm('Do you really wanna delete this book?')){
-        this.removeBook(book.id)
+      //console.log(this.$i18n.locale);
+      if(this.$i18n.locale=="en"){
+        if(confirm('Do you really wanna delete this book?')){
+          this.removeBook(book.id)
+        }
+      }else{
+        if(confirm('정말 삭제하시겠습니까?')){
+          this.removeBook(book.id)
+        }
       }
+    },
+    handleBuyBook(book){
+      console.log(book.id);
     },
   },
   created(){

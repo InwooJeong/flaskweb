@@ -1,0 +1,11 @@
+{
+    "app_name": "Your Library",
+    "add_book": "Add Book",
+    "title": "Title",
+    "author": "Author",
+    "check": "Read?",
+    "price": "Purchase Price",
+    "update": "Update",
+    "delete": "Delete",
+    "buy": "Buy Now!"
+}
