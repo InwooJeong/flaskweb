@@ -13,10 +13,10 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 BOOKS = [
     {
         'id': uuid.uuid4().hex,
-        'title': 'Demian',
-        'author': 'Hermann Hesse',
+        'title': 'Dialektik der Aufklärung',
+        'author': 'Max Horkheimer',
         'read': True,
-        'price': 12000
+        'price': 22000
     },
     {
         'id': uuid.uuid4().hex,
@@ -27,8 +27,8 @@ BOOKS = [
     },
     {
         'id': uuid.uuid4().hex,
-        'title': 'Harry Potter and the Prisoner of Azkaban',
-        'author': 'J. K. Rowling',
+        'title': '문학의 숲을 거닐다',
+        'author': '장영희',
         'read': True,
         'price': 15000
     }

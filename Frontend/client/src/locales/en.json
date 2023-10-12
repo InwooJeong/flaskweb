@@ -1,5 +1,5 @@
 {
-    "app_name": "Your Library",
+    "app_name": "Your Library(DangDo)",
     "add_book": "Add Book",
     "title": "Title",
     "author": "Author",
@@ -7,5 +7,14 @@
     "price": "Purchase Price",
     "update": "Update",
     "delete": "Delete",
-    "buy": "Buy Now!"
+    "buy": "Buy Now!",
+    "no": "You don't have any book! please add one",
+    "add_modal": "Add a new Book",
+    "submit": "submit",
+    "reset": "reset",
+    "del_chk": "Do you really wanna delete this book?",
+    "alr_del": "Book removed!",
+    "alr_upd": "Book updated",
+    "alr_add": "Book added!",
+    "alr_adf": "Book add failed!"
 }

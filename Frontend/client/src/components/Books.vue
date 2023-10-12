@@ -2,8 +2,10 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-10">
-        <h1>{{$t('app_name')}}</h1>
-        <select style="float: right;" v-model="$i18n.locale">
+        <!-- <h1>{{$t('app_name')}}</h1> -->
+        <TextAnime :app_name="app_name" v-if="anime"/>
+        <TextAnime2 :app_name="app_name" v-if="anime2"/>
+        <select style="float: right;" v-model="$i18n.locale" @change="[lochange(),anime=!anime,anime2=!anime2]">
             <option v-for="locale in $i18n.availableLocales" :key="`locale-${locale}`" :value="locale">{{ locale }} </option>
         </select>
         <hr><br><br>
@@ -64,7 +66,7 @@
 
           <tbody v-if="books.length<1">
             <tr>
-              <td colspan="5">You don't have any book! please add one</td>
+              <td colspan="5">{{$t('no')}}</td>
             </tr>
           </tbody>
 
@@ -84,7 +86,7 @@
       <div class="modal-content">
         
         <div class="modal-header">
-          <h5 class="modal-title">Add a new book</h5>
+          <h5 class="modal-title">{{$t('add_modal')}}</h5>
           <button
             type="button"
             class="close"
@@ -98,7 +100,7 @@
         <div class="modal-body">
           <form>
             <div class="mb-3">
-              <label for="addBookTitle" class="form-label">Title:</label>
+              <label for="addBookTitle" class="form-label">{{$t('title')}}:</label>
               <input
                 type="text"
                 class="form-control"
@@ -107,7 +109,7 @@
                 placeholder="Enter title">
             </div>
             <div class="mb-3">
-              <label for="addBookAuthor" class="form-label">Author:</label>
+              <label for="addBookAuthor" class="form-label">{{$t('author')}}:</label>
               <input
                 type="text"
                 class="form-control"
@@ -116,7 +118,7 @@
                 placeholder="Enter author">
             </div>
             <div class="mb-3">
-              <label for="addBookPrice" class="form-label">Purchase price : </label>
+              <label for="addBookPrice" class="form-label">{{$t('price')}} : </label>
               <input
                 type="number"
                 step="1"
@@ -131,20 +133,20 @@
                 class="form-check-input"
                 id="addBookRead"
                 v-model="addBookForm.read">
-                <label class="form-check-label" for="addBookRead">Read?</label>
+                <label class="form-check-label" for="addBookRead">{{$t('check')}}</label>
             </div>
             <div class="btn-group" role="group">
               <button
                 type="button"
                 class="btn btn-primary btn-sm"
                 @click="handleAddSubmit">
-                submit
+                {{$t('submit')}}
               </button>
               <button
                 type="button"
                 class="btn btn-danger btn-sm"
                 @click="handleAddReset">
-                reset
+                {{$t('reset')}}
               </button>
             </div>
           </form>
@@ -181,7 +183,7 @@
         <div class="modal-body">
           <form>
             <div class="mb-3">
-              <label for="updateBookTitle" class="form-label">Title:</label>
+              <label for="updateBookTitle" class="form-label">{{$t('title')}}:</label>
               <input
                 type="text"
                 class="form-control"
@@ -190,7 +192,7 @@
                 placeholder="Enter title">
             </div>
             <div class="mb-3">
-              <label for="updateBookAuthor" class="form-label">Author:</label>
+              <label for="updateBookAuthor" class="form-label">{{$t('author')}}:</label>
               <input
                 type="text"
                 class="form-control"
@@ -199,7 +201,7 @@
                 placeholder="Enter author">
             </div>
             <div class="mb-3">
-              <label for="updateBookPrice" class="form-label">Price:</label>
+              <label for="updateBookPrice" class="form-label">{{$t('price')}}:</label>
               <input
                 type="number"
                 step="1"
@@ -214,20 +216,20 @@
                 class="form-check-input"
                 id="updateBookRead"
                 v-model="updateBookForm.read">
-                <label class="form-check-label" for="updateBookRead">Read?</label>
+                <label class="form-check-label" for="updateBookRead">{{$t('check')}}</label>
             </div>
             <div class="btn-group" role="group">
               <button
                 type="button"
                 class="btn btn-primary btn-sm"
                 @click="handleUpdateSubmit">
-                submit
+                {{$t('submit')}}
               </button>
               <button
                 type="button"
                 class="btn btn-danger btn-sm"
                 @click="handleUpdateCancel">
-                reset
+                {{$t('reset')}}
               </button>
             </div>
           </form>
@@ -245,6 +247,8 @@
 import axios from 'axios';
 import Alert from './Alert.vue';
 import AlertDanger from './AlertDanger.vue';
+import TextAnime from './TextAnime.vue'
+import TextAnime2 from './TextAnime2.vue'
 
 export default{
   data(){
@@ -268,11 +272,16 @@ export default{
       message: '',
       showMessage: false,
       showMessage2: false,
+      app_name: '',
+      anime: true,
+      anime2: false,
     };
   },
   components: {
     alert: Alert,
     alert2: AlertDanger,
+    TextAnime: TextAnime,
+    TextAnime2: TextAnime2
   },
   methods:{
     addBook(payload){
@@ -280,7 +289,7 @@ export default{
       axios.post(path, payload)
         .then(()=>{
           this.getBooks();
-          this.message = 'Book added!';
+          this.message = this.$t("alr_add");
           this.showMessage = true;
           setTimeout(()=>{
             this.showMessage = false;
@@ -289,7 +298,7 @@ export default{
         .catch((error)=>{
           console.error(error)
           this.getBooks();
-          this.message = 'Book add failed!';
+          this.message = this.$t("alr_adf");
           this.showMessage2 = true;
           setTimeout(()=>{
             this.showMessage2 = false;
@@ -312,7 +321,7 @@ export default{
         .then(()=>{
           this.getBooks();
           console.log("update axios");
-          this.message = 'Book updated!';
+          this.message = this.$t("alr_upd");
           this.showMessage = true;
           setTimeout(()=>{
             this.showMessage = false;
@@ -328,7 +337,7 @@ export default{
       axios.delete(path)
         .then(()=>{
           this.getBooks();
-          this.message = 'Book removed!';
+          this.message = this.$t("alr_del");
           this.showMessage = true;
           setTimeout(()=>{
             this.showMessage = false;
@@ -407,22 +416,21 @@ export default{
       this.updateBook(payload, this.updateBookForm.id);
     },
     handleDeleteBook(book){
-      //console.log(this.$i18n.locale);
-      if(this.$i18n.locale=="en"){
-        if(confirm('Do you really wanna delete this book?')){
-          this.removeBook(book.id)
-        }
-      }else{
-        if(confirm('정말 삭제하시겠습니까?')){
-          this.removeBook(book.id)
-        }
+      if(confirm(this.$t("del_chk"))){
+        this.removeBook(book.id)
       }
+    
     },
     handleBuyBook(book){
       console.log(book.id);
     },
+    lochange(){
+      this.app_name = this.$t("app_name");
+      console.log(this.$t("app_name"))
+    },
   },
   created(){
+    this.app_name = this.$t("app_name");
     this.getBooks();
   },
 };
