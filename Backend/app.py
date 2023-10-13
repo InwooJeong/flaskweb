@@ -1,3 +1,4 @@
+import json
 import uuid
 
 from flask import Flask, jsonify, request
@@ -16,21 +17,24 @@ BOOKS = [
         'title': 'Dialektik der Aufklärung',
         'author': 'Max Horkheimer',
         'read': True,
-        'price': 22000
+        'price': 22000,
+        'sweet': 0
     },
     {
         'id': uuid.uuid4().hex,
         'title': 'The Lord of the Rings: The Two Towers',
         'author': 'J. R. R. Tolkien',
         'read': False,
-        'price': 17000
+        'price': 17000,
+        'sweet': 0
     },
     {
         'id': uuid.uuid4().hex,
         'title': '문학의 숲을 거닐다',
         'author': '장영희',
         'read': True,
-        'price': 15000
+        'price': 15000,
+        'sweet': 0
     }
 ]
 
@@ -51,7 +55,8 @@ def all_books():
             'title': post_data.get('title'),
             'author': post_data.get('author'),
             'read': post_data.get('read'),
-            'price': post_data.get('price')
+            'price': post_data.get('price'),
+            'sweet': post_data.get('sweet')
         })
         response_object['message'] = 'Book added!'
     else:
@@ -59,7 +64,7 @@ def all_books():
     return jsonify(response_object)
 
 
-@app.route('/books/<book_id>', methods=['PUT','DELETE'])
+@app.route('/books/<book_id>', methods=['PUT', 'DELETE', 'PATCH'])
 def single_book(book_id):
     response_object = {'status': 'success'}
     if request.method == 'PUT':
@@ -70,13 +75,18 @@ def single_book(book_id):
             'title': post_data.get('title'),
             'author': post_data.get('author'),
             'read': post_data.get('read'),
-            'price': post_data.get('price')
+            'price': post_data.get('price'),
+            'sweet': post_data.get('sweet'),
         })
         response_object['message'] = 'Updated!'
     if request.method == 'DELETE':
         remove_book(book_id)
         response_object['message'] = 'Book removed!'
+    if request.method == 'PATCH':
+        up_sweet(book_id)
+
     return jsonify(response_object)
+
 
 def remove_book(book_id):
     for book in BOOKS:
@@ -84,6 +94,12 @@ def remove_book(book_id):
             BOOKS.remove(book)
             return True
     return False
+
+
+def up_sweet(book_id):
+    for book in BOOKS:
+        if book['id'] == book_id:
+            book['sweet'] += 1
 
 
 if __name__ == '__main__':

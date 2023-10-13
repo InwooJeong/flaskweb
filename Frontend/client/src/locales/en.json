@@ -7,7 +7,6 @@
     "price": "Purchase Price",
     "update": "Update",
     "delete": "Delete",
-    "buy": "Buy Now!",
     "no": "You don't have any book! please add one",
     "add_modal": "Add a new Book",
     "submit": "submit",
@@ -16,5 +15,7 @@
     "alr_del": "Book removed!",
     "alr_upd": "Book updated",
     "alr_add": "Book added!",
-    "alr_adf": "Book add failed!"
+    "alr_adf": "Book add failed!",
+    "upd": "Update Book information",
+    "up": "Up dangdo!"
 }

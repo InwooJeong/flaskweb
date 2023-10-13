@@ -32,7 +32,11 @@
           
           <tbody v-if="books.length>0">
             <tr v-for="(book, index) in books" :key="index">
-              <td>{{ book.title }}</td>
+              <td>{{ book.title }} 
+                <span v-if="book.sweet>0">
+                  ❤️({{ book.sweet }})
+                </span>
+              </td>
               <td>{{ book.author }}</td>
               <td>
                 <span v-if="book.read">o</span>
@@ -53,11 +57,11 @@
                     @click="handleDeleteBook(book)">
                     {{$t('delete')}}
                   </button>
-                  <button
-                    type="button"
+                  <button 
+                    type="button" 
                     class="btn btn-primary btn-sm"
-                    @click="handleBuyBook(book)">
-                    {{$t('buy')}}
+                    @click="handleUpBook(book)">
+                    {{$t('up')}}
                   </button>
                 </div>
               </td>
@@ -169,7 +173,7 @@
       <div class="modal-content">
         
         <div class="modal-header">
-          <h5 class="modal-title">Update</h5>
+          <h5 class="modal-title">{{$t('upd')}}</h5>
           <button
             type="button"
             class="close"
@@ -261,12 +265,14 @@ export default{
         author:'',
         read:[],
         price:'',
+        sweet: 0,
       },
       addBookForm: {
         title: '',
         author: '',
         read: [],
         price: '',
+        sweet: 0,
       },
       books: [],
       message: '',
@@ -310,6 +316,8 @@ export default{
       axios.get(path)
         .then((res)=>{
           this.books = res.data.books;
+          console.log(this.books)
+          this.books = this.books.sort((a,b) => b.sweet - a.sweet)
         })
         .catch((error)=>{
           console.error(error);
@@ -331,6 +339,18 @@ export default{
           console.error(error);
           this.getBooks();
         });
+    },
+    handleUpBook(book){
+      //alert(book.id)
+      const path = `http://localhost:5000/books/${book.id}`;
+      axios.patch(path)
+        .then(()=>{
+          this.getBooks();
+        })
+        .catch((error)=>{
+          console.error(error);
+          this.getBooks();
+        })
     },
     removeBook(bookID){
       const path = `http://localhost:5000/books/${bookID}`;
@@ -367,6 +387,7 @@ export default{
         author: this.addBookForm.author,
         read, // property shorthand
         price: this.addBookForm.price,
+        sweet: this.addBookForm.sweet,
       };
       this.addBook(payload);
       this.initForm();
@@ -376,11 +397,13 @@ export default{
       this.addBookForm.author = '';
       this.addBookForm.read = [];
       this.addBookForm.price = '';
+      this.addBookForm.sweet = 0;
       this.updateBookForm.id = '';
       this.updateBookForm.title = '';
       this.updateBookForm.author = '';
       this.updateBookForm.read = [];
       this.updateBookForm.price = '';
+      this.updateBookForm.sweet = 0;
     },
     toggleAddBookModal(){
       const body = document.querySelector('body');
@@ -412,6 +435,7 @@ export default{
         author: this.updateBookForm.author,
         read,
         price: this.updateBookForm.price,
+        sweet: this.updateBookForm.sweet,
       };
       this.updateBook(payload, this.updateBookForm.id);
     },
@@ -420,9 +444,6 @@ export default{
         this.removeBook(book.id)
       }
     
-    },
-    handleBuyBook(book){
-      console.log(book.id);
     },
     lochange(){
       this.app_name = this.$t("app_name");
